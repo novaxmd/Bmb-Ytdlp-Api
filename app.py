@@ -40,6 +40,12 @@ def extract_info(query_or_url: str) -> dict:
         "skip_download": True,
         "noplaylist": True,
         "extract_flat": False,
+        "extractor_args": {
+            "youtube": {"player_client": ["android", "web"]},
+        },
+        "http_headers": {
+            "User-Agent": "com.google.android.youtube/19.29.37 (Linux; U; Android 14) gzip"
+        },
     }
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -128,7 +134,17 @@ async def health():
 
 @app.get("/search", tags=["search"])
 async def search(q: str = Query(..., description="Song or video name to search for")):
-    ydl_opts = {"quiet": True, "no_warnings": True, "skip_download": True}
+    ydl_opts = {
+        "quiet": True,
+        "no_warnings": True,
+        "skip_download": True,
+        "extractor_args": {
+            "youtube": {"player_client": ["android", "web"]},
+        },
+        "http_headers": {
+            "User-Agent": "com.google.android.youtube/19.29.37 (Linux; U; Android 14) gzip"
+        },
+    }
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(f"ytsearch10:{q}", download=False)
